@@ -198,8 +198,12 @@ class Command(BaseCommand):  # pragma: no cover
             return "url(%s)" % url
 
         url = url.split('?')[0]
-        full_url = os.path.join(settings.ROOT, os.path.dirname(parent),
-                                url)
+        if url.startswith('/'):
+            # Must be an absolute URL to media.
+            full_url = os.path.join(settings.ROOT, url[1:])
+        else:
+            full_url = os.path.join(settings.ROOT, os.path.dirname(parent),
+                                    url)
 
         return "url(%s?%s)" % (url, self._file_hash(full_url))
 
